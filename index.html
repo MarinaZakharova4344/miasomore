@@ -401,6 +401,9 @@
             <input id="b-guests" name="guests" type="number" min="1" max="20" value="2" required aria-describedby="b-guests-err">
             <p class="field__error" id="b-guests-err"></p>
           </div>
+          <div class="hp" aria-hidden="true">
+            <label>Не заполняйте это поле <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          </div>
           <div class="field field--full">
             <label for="b-comment">Комментарий <span class="field__opt">(необязательно)</span></label>
             <textarea id="b-comment" name="comment" rows="3" placeholder="Повод, пожелания по столу, детский стул…"></textarea>
@@ -578,6 +581,7 @@
 
 <div class="toast" role="status" aria-live="polite" data-toast></div>
 
+<script src="js/config.js" defer></script>
 <script src="js/data.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>

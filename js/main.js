@@ -566,14 +566,36 @@
   bDate.min = iso(new Date());
   bindLiveValidation(bookingForm);
 
-  bookingForm.addEventListener('submit', e => {
+  const BOOKING_URL = (window.MM_CONFIG || {}).bookingEndpoint;
+
+  bookingForm.addEventListener('submit', async e => {
     e.preventDefault();
     const status = $('.form__status', bookingForm);
+    const submit = $('.form__submit', bookingForm);
     status.textContent = '';
     const fields = ['b-name', 'b-phone', 'b-date', 'b-time', 'b-guests'].map(id => $('#' + id));
     if (!validateForm(fields)) return;
-    // TODO: отправка заявки на сервер / в CRM
     const data = Object.fromEntries(new FormData(bookingForm));
+
+    if (BOOKING_URL) {
+      submit.disabled = true;
+      submit.textContent = 'Отправляем…';
+      try {
+        const res = await fetch(BOOKING_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(res.status);
+      } catch {
+        status.textContent = 'Не получилось отправить заявку. Позвоните нам: +7 905 222-62-72';
+        return;
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Забронировать';
+      }
+    }
+
     status.textContent = `Спасибо, ${data.name}! Мы перезвоним, чтобы подтвердить бронь.`;
     bookingForm.reset();
     $$('[aria-invalid]', bookingForm).forEach(i => i.removeAttribute('aria-invalid'));

@@ -847,3 +847,6 @@ ul, ol { padding: 0; list-style: none; }
   .waves .drift-a, .waves .drift-b { animation: none; }
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* Ловушка для спам-ботов в форме бронирования */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
