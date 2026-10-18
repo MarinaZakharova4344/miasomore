@@ -917,3 +917,10 @@ button.dish__photo:hover img { transform: scale(1.06); }
 button.dish__photo:focus-visible { outline: 1px solid var(--blue); outline-offset: 3px; }
 .lightbox__figure img { border: 8px solid var(--milk); border-bottom: 0; }
 @media (max-width: 767px) { .photo { border-width: 4px; outline-offset: 4px; } }
+
+/* Пометка «можно с собакой» */
+.dog-note { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto !important; font-size: 13px; letter-spacing: .04em; color: var(--cream) !important; }
+.dog-note svg { width: 20px; height: 20px; color: var(--blue); flex-shrink: 0; }
+.contact-offer--dog { border-color: var(--line-strong); }
+.contact-offer--dog + .contact-offer { margin-top: 12px; }
+.contact-offer__icon { width: 36px; height: 36px; color: var(--blue); flex-shrink: 0; }
