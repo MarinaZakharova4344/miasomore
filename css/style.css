@@ -491,6 +491,17 @@ ul, ol { padding: 0; list-style: none; }
   min-width: 0;
 }
 @media (min-width: 768px) { .dish { grid-template-columns: 96px 1fr; gap: 20px; } }
+.dish.dish--text { grid-template-columns: 1fr; }
+.dish__meta { flex-wrap: wrap; }
+.dish__add { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.dish__select {
+  min-height: 36px; max-width: 160px;
+  padding: 6px 30px 6px 10px;
+  background: rgba(236, 232, 225, .03) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238C9BB0' stroke-width='1.2'/%3E%3C/svg%3E") no-repeat right 10px center / 10px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  appearance: none; color: var(--cream); font-size: 13px; color-scheme: dark;
+}
+.dish__select option { background: var(--bg); }
 .dish__line { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; }
 .dish__name { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.2; }
 .dots { flex: 1; min-width: 24px; border-bottom: 1px dotted var(--line-strong); transform: translateY(-5px); }

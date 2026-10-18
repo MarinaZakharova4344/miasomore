@@ -300,27 +300,35 @@
     const cat = MENU.find(c => c.id === catId) || MENU[0];
     if (!cat) return;
     panel.setAttribute('aria-labelledby', 'tab-' + cat.id);
-    panel.innerHTML = cat.items.map((d, i) => `
-      <article class="dish" style="animation-delay:${i * 60}ms">
-        <figure class="dish__photo photo">
-          ${d.img ? `<img src="${d.img}" alt="${esc(d.name)}" loading="lazy" decoding="async" width="360" height="360">` : icon(d.tags.includes('fish') ? 'i-fish' : 'i-meat', 'photo__icon')}
-        </figure>
+    panel.innerHTML = cat.items.map((d, i) => {
+      const tags = d.tags || [];
+      const v = d.variants;
+      const price = v ? (v.length > 1 ? 'от ' + fmt(Math.min(...v.map(x => x.price))) : fmt(v[0].price)) : fmt(d.price);
+      const meta = [
+        d.weight ? `<span>${esc(d.weight)}</span>` : '',
+        v && v.length > 1 ? `<span>${v.map(x => `${esc(x.label)} — ${fmt(x.price)}`).join(' · ')}</span>` : '',
+        v && v.length === 1 ? `<span>${esc(v[0].label)}</span>` : '',
+        tags.length ? `<span class="dish__tags">${tags.map(t => TAG_ICONS[t] ? `<span title="${TAG_ICONS[t][1]}">${icon(TAG_ICONS[t][0])}<span class="visually-hidden">${TAG_ICONS[t][1]}</span></span>` : '').join('')}</span>` : '',
+      ].join('');
+      return `
+      <article class="dish${d.img ? '' : ' dish--text'}" style="animation-delay:${Math.min(i, 10) * 50}ms">
+        ${d.img ? `<figure class="dish__photo photo"><img src="${d.img}" alt="${esc(d.name)}" loading="lazy" decoding="async" width="360" height="360"></figure>` : ''}
         <div class="dish__body">
         <div class="dish__line">
           <h3 class="dish__name">${esc(d.name)}</h3>
           <span class="dots" aria-hidden="true"></span>
-          <span class="dish__price">${fmt(d.price)}</span>
+          <span class="dish__price">${price}</span>
         </div>
-        <p class="dish__desc">${esc(d.desc)}</p>
-        <div class="dish__meta">
-          <span>${esc(d.weight)}</span>
-          ${d.tags.length ? `<span class="dish__tags">${d.tags.map(t => TAG_ICONS[t] ? `<span title="${TAG_ICONS[t][1]}">${icon(TAG_ICONS[t][0])}<span class="visually-hidden">${TAG_ICONS[t][1]}</span></span>` : '').join('')}</span>` : ''}
-        </div>
+        ${d.desc ? `<p class="dish__desc">${esc(d.desc)}</p>` : ''}
+        ${meta ? `<div class="dish__meta">${meta}</div>` : ''}
         <div class="dish__add">
+          ${v && v.length > 1 ? `<label class="visually-hidden" for="dv-${d.id}">Вариант</label>
+          <select class="dish__select" id="dv-${d.id}" data-variant>${v.map((x, j) => `<option value="${j}">${esc(x.label)}</option>`).join('')}</select>` : ''}
           <button class="add-btn" type="button" data-dish="${d.id}" aria-label="Добавить в корзину: ${esc(d.name)}">${icon('i-plus')}В корзину</button>
         </div>
         </div>
-      </article>`).join('');
+      </article>`;
+    }).join('');
     $$('.dish__photo img', panel).forEach(watchPhoto);
   }
 
@@ -357,7 +365,13 @@
     let dish;
     for (const c of MENU) { dish = c.items.find(d => d.id === btn.dataset.dish); if (dish) break; }
     if (!dish) return;
-    addToCart({ key: dish.id, id: dish.id, type: 'menu', name: dish.name, meta: dish.weight, unitPrice: dish.price, qty: 1 });
+    if (dish.variants) {
+      const sel = $('[data-variant]', btn.closest('.dish'));
+      const v = dish.variants[sel ? +sel.value : 0];
+      addToCart({ key: `${dish.id}@${v.label}`, id: dish.id, type: 'menu', name: dish.name, meta: v.label, unitPrice: v.price, qty: 1 });
+    } else {
+      addToCart({ key: dish.id, id: dish.id, type: 'menu', name: dish.name, meta: dish.weight, unitPrice: dish.price, qty: 1 });
+    }
     flash(btn);
   });
 
