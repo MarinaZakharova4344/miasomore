@@ -679,6 +679,12 @@ button.dish__photo:hover img { transform: scale(1.06); }
 .about__photos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .about__photos .photo:nth-child(2) { margin-top: 48px; }
 
+/* Фоновые щупальца в других разделах */
+.tentacles--booking img, .tentacles--footer img { opacity: .16; animation-duration: 40s; }
+.tentacles--booking .tentacles__right { width: min(80vw, 820px); right: -12%; bottom: -18%; }
+.tentacles--booking .tentacles__left { width: min(45vw, 480px); left: -10%; top: 10%; }
+.tentacles--footer .tentacles__right { width: min(70vw, 700px); right: -10%; bottom: -30%; }
+
 /* ---------- Формы ---------- */
 .form__grid { display: grid; gap: 20px; }
 @media (min-width: 640px) { .form__grid { grid-template-columns: 1fr 1fr; gap: 24px 28px; } }
@@ -881,3 +887,33 @@ button.dish__photo:hover img { transform: scale(1.06); }
 
 /* Ловушка для спам-ботов в форме бронирования */
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Щупальца-украшения в пустых углах разделов (только на широких экранах, мимо фото) */
+.deco { position: absolute; z-index: 0; display: none; height: auto; max-width: none; opacity: .24; pointer-events: none; }
+.deco--flip { transform: scaleX(-1); }
+@media (min-width: 1024px) {
+  .deco { display: block; }
+  .deco--dir { width: 360px; top: 24px; right: 0; transform: scaleX(-1); }
+  .deco--menu-tl { width: 290px; top: 0; left: 0; }
+  .deco--menu-br { width: 240px; bottom: 0; right: 0; transform: scaleX(-1); }
+  .deco--delivery { width: 280px; bottom: 0; left: 0; }
+  .deco--about { width: 300px; bottom: 0; right: 0; transform: scaleX(-1); }
+  .deco--contacts { width: 220px; top: 0; right: 0; transform: scaleX(-1); }
+}
+@media (min-width: 1600px) {
+  .deco--dir { width: 440px; }
+  .deco--menu-tl, .deco--contacts { width: 280px; }
+  .deco--menu-br, .deco--delivery, .deco--about { width: 340px; }
+}
+
+/* Белые рамки у фото: паспарту + тонкая линия снаружи */
+.photo {
+  border: 6px solid var(--milk);
+  outline: 1px solid rgba(236, 232, 225, .35);
+  outline-offset: 5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+.dish__photo.photo { border-width: 3px; outline: none; box-shadow: none; }
+button.dish__photo:focus-visible { outline: 1px solid var(--blue); outline-offset: 3px; }
+.lightbox__figure img { border: 8px solid var(--milk); border-bottom: 0; }
+@media (max-width: 767px) { .photo { border-width: 4px; outline-offset: 4px; } }
