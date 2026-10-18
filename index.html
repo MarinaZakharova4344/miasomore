@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MясоMore — ресторан, магазин и доставка мяса и морепродуктов</title>
+  <meta name="description" content="MясоMore — ресторан, магазин и доставка. Мясо на гриле, свежая рыба и морепродукты: блюда ресторана и продукты на развес с доставкой домой.">
+  <meta name="theme-color" content="#011730">
+  <link rel="canonical" href="https://example.ru/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="MясоMore">
+  <meta property="og:title" content="MясоMore — мясо & море">
+  <meta property="og:description" content="Ресторан, магазин и доставка — лучшее с земли и из моря.">
+  <meta property="og:image" content="assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- PT Serif — только для знака «&» в заголовке (классическая форма, как в логотипе) -->
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif&text=%26&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "MясоMore",
+    "description": "Ресторан, магазин и доставка мяса и морепродуктов",
+    "servesCuisine": ["Гриль", "Морепродукты"],
+    "image": "assets/og-image.jpg",
+    "hasMenu": "#menu",
+    "telephone": "+7 905 222-62-72",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Московский проспект, 183–185, литер Б",
+      "addressLocality": "Санкт-Петербург",
+      "addressCountry": "RU"
+    },
+    "openingHours": "Mo-Su 10:00-22:00",
+    "sameAs": ["https://t.me/MiasoMore"]
+  }
+  </script>
+</head>
+<body>
+
+<!-- Иконки (тонкие линейные) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.4 11.2a1.5 1.5 0 0 1-1.5 1.3H7.9a1.5 1.5 0 0 1-1.5-1.3z"/><path d="M9 9.5V6a3 3 0 0 1 6 0v3.5"/></g></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" d="M6.5 3.5h3l1.5 4-2 1.3a10 10 0 0 0 6.2 6.2l1.3-2 4 1.5v3a1.8 1.8 0 0 1-2 1.8A16.5 16.5 0 0 1 4.7 5.5a1.8 1.8 0 0 1 1.8-2z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" d="M12 6v12M6 12h12"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" d="M6 12h12"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M4 12h15M14 7l5 5-5 5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></symbol>
+    <symbol id="i-meat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M4.5 12.5c0-4.4 3.6-7.5 8-7.5 4 0 6.5 2.6 6.5 6 0 2.6-1.6 3.8-3.6 5.2-2.1 1.5-3.7 3.3-6.3 2.8-2.7-.5-4.6-3.3-4.6-6.5z"/><circle cx="13" cy="10.5" r="2"/></g></symbol>
+    <symbol id="i-fish" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M6.5 12c2.5-3.5 6-5 9.3-5 2.5 0 4.4 2 5.2 5-.8 3-2.7 5-5.2 5-3.3 0-6.8-1.5-9.3-5z"/><path d="M6.5 12 2.8 8.5v7z"/></g><circle cx="17" cy="11" r=".8" fill="currentColor"/></symbol>
+    <symbol id="i-spicy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5c0-1.6 1-2.8 2.6-3"/><path d="M13.5 6.5c-3.8 0-5.6 3.2-5.6 7.3 0 3.4 1 5.9 2.6 7.2 3.6-1.2 8-5.4 8-10.4 0-2.6-2.1-4.1-5-4.1z"/></g></symbol>
+    <symbol id="i-hit" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" d="m12 3.8 2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M4.5 8.5h15V20h-15z"/><path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5"/></g></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2.5 6.5h11v10h-11zM13.5 10h4l3 3.2v3.3h-7z"/><circle cx="6.5" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></g></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="6" width="18" height="12.5" rx="1.5"/><path d="M3 10h18M6.5 15h4"/></g></symbol>
+    <symbol id="i-cash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="6.5" width="19" height="11" rx="1"/><circle cx="12" cy="12" r="2.5"/></g></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h2.5v2.5H14zM17.5 17.5H20V20h-2.5zM14 19h1.5M19 14v1.5"/></g></symbol>
+    <symbol id="i-sprig" viewBox="0 0 80 140">
+      <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M40 138c-2-16 1.5-34 .5-56-1-20 1-42 2.5-66"/>
+        <g transform="translate(42 22) rotate(-82)"><path d="M0 0c7-7.5 21-7.5 28 0-7 7.5-21 7.5-28 0z"/><path d="M3 0h22"/></g>
+        <g transform="translate(41 48) rotate(-38)"><path d="M0 0c6.5-7 20-7 26 0-6 7-19.5 7-26 0z"/><path d="M3 0h20"/></g>
+        <g transform="translate(40.5 60) rotate(-142)"><path d="M0 0c6.5-7 20-7 26 0-6 7-19.5 7-26 0z"/><path d="M3 0h20"/></g>
+        <g transform="translate(40.5 74) rotate(-24)"><path d="M0 0c6-6.5 18-6.5 24 0-6 6.5-18 6.5-24 0z"/><path d="M3 0h18"/></g>
+        <g transform="translate(40 84) rotate(-160)"><path d="M0 0c6-6.5 18-6.5 24 0-6 6.5-18 6.5-24 0z"/><path d="M3 0h18"/></g>
+        <path d="M41.5 38c-4-4-8.5-7-14-9M33 31.5l-1.5-6M30 30l-6 2"/>
+        <circle cx="27.3" cy="28.6" r="1.8"/><circle cx="31.2" cy="24" r="1.8"/><circle cx="22.6" cy="32.4" r="1.8"/>
+        <path d="M40 96c5-3 10-5 15.5-9.5M50 90l2.5 5M53 88.5l5-1"/>
+        <circle cx="56.6" cy="85.6" r="1.8"/><circle cx="53.4" cy="96.6" r="1.8"/><circle cx="59.6" cy="87" r="1.8"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<!-- ============ ШАПКА ============ -->
+<header class="header" id="header">
+  <div class="header__inner container">
+    <a class="header__logo" href="#top" aria-label="MясоMore — на главную">
+      <img src="assets/logo-mark-light.png" alt="" width="331" height="318">
+      <span class="header__name">MясоMore</span>
+    </a>
+
+    <nav class="nav" aria-label="Основное меню">
+      <ul class="nav__list">
+        <li><a href="#restaurant">Ресторан</a></li>
+        <li><a href="#menu">Меню</a></li>
+        <li><a href="#shop">Магазин</a></li>
+        <li><a href="#delivery">Доставка</a></li>
+        <li><a href="#about">О нас</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__phone" href="tel:+79052226272"><svg aria-hidden="true"><use href="#i-phone"/></svg><span>+7 905 222-62-72</span></a>
+      <a class="btn btn--outline btn--sm header__book" href="#booking">Забронировать стол</a>
+      <button class="icon-btn cart-toggle" type="button" aria-controls="cart" aria-expanded="false" aria-label="Корзина, товаров: 0">
+        <svg aria-hidden="true"><use href="#i-cart"/></svg>
+        <span class="cart-toggle__count" data-cart-count hidden>0</span>
+      </button>
+      <button class="icon-btn burger" type="button" aria-controls="mobile-nav" aria-expanded="false" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Мобильное меню -->
+<div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Меню сайта" hidden>
+  <div class="waves waves--top" data-waves="5" aria-hidden="true"></div>
+  <nav class="mobile-nav__list" aria-label="Мобильное меню">
+    <a href="#restaurant">Ресторан</a>
+    <a href="#menu">Меню</a>
+    <a href="#shop">Магазин</a>
+    <a href="#delivery">Доставка</a>
+    <a href="#about">О нас</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+  <div class="mobile-nav__footer">
+    <a class="btn btn--primary" href="#booking">Забронировать стол</a>
+    <a class="mobile-nav__phone" href="tel:+79052226272">+7 905 222-62-72</a>
+  </div>
+  <div class="waves waves--bottom" data-waves="5" aria-hidden="true"></div>
+</div>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="tentacles" aria-hidden="true">
+      <img class="tentacles__left" src="assets/decor/tentacles-left.svg" alt="" width="700" height="800">
+      <img class="tentacles__right" src="assets/decor/tentacles-right.svg" alt="" width="900" height="1000">
+    </div>
+    <div class="waves waves--top" data-waves="6" aria-hidden="true"></div>
+    <div class="hero__content container">
+      <img class="hero__logo" src="assets/logo-light.png" alt="MясоMore — ресторан, магазин, доставка" width="576" height="509" fetchpriority="high">
+      <h1 class="hero__title" id="hero-title">Мясо <span class="amp" aria-label="и">&amp;</span> Море</h1>
+      <p class="hero__lead">Ресторан, магазин и доставка — лучшее с земли и из моря</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#menu">Смотреть меню</a>
+        <a class="btn btn--outline" href="#shop">Заказать доставку</a>
+      </div>
+    </div>
+    <div class="waves waves--bottom" data-waves="6" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============ ТРИ НАПРАВЛЕНИЯ ============ -->
+  <section class="section directions" id="restaurant" aria-labelledby="dir-title">
+    <div class="container">
+      <header class="section-head reveal">
+        <p class="eyebrow">Земля &amp; море</p>
+        <h2 class="section-title" id="dir-title">Три направления</h2>
+        <span class="brandline" aria-hidden="true"><i></i></span>
+      </header>
+
+      <div class="directions__grid">
+        <article class="dir-card reveal">
+          <figure class="photo photo--4x5" data-label="Фото: зал ресторана">
+            <img src="assets/photos/restaurant.webp" alt="Зал ресторана MясоMore: деревянные столы, белые фактурные стены, витрина с подсветкой" loading="lazy" decoding="async">
+          </figure>
+          <div class="dir-card__body">
+            <h3 class="dir-card__title">Ресторан</h3>
+            <p>Спокойный зал, тёплый свет и кухня, где мясо с гриля и морепродукты стоят на равных. Ужин вдвоём, встреча с друзьями, семейный праздник.</p>
+            <a class="link-arrow" href="#booking">Забронировать стол <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </article>
+
+        <article class="dir-card reveal">
+          <figure class="photo photo--4x5" data-label="Фото: витрина магазина">
+            <img src="assets/photos/shop.webp" alt="Креветки на льду" loading="lazy" decoding="async">
+          </figure>
+          <div class="dir-card__body">
+            <h3 class="dir-card__title">Магазин</h3>
+            <p>Креветки, рыба, краб, икра и морепродукты — на развес и в упаковках. Подскажем, что выбрать, и упакуем так, как вам удобно.</p>
+            <a class="link-arrow" href="#shop">Перейти в магазин <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </article>
+
+        <article class="dir-card reveal">
+          <figure class="photo photo--4x5" data-label="Фото: заказ на доставку">
+            <img src="assets/photos/delivery.webp" alt="Паэлья с морепродуктами в сковороде" loading="lazy" decoding="async">
+          </figure>
+          <div class="dir-card__body">
+            <h3 class="dir-card__title">Доставка</h3>
+            <p>Блюда ресторана и продукты из магазина — в одном заказе и к вам домой. Горячее привозим горячим, охлаждённое — охлаждённым.</p>
+            <a class="link-arrow" href="#delivery">Условия доставки <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ МЕНЮ ============ -->
+  <section class="section menu" id="menu" aria-labelledby="menu-title">
+    <div class="corner-waves corner-waves--tr" data-corner aria-hidden="true"></div>
+    <div class="corner-waves corner-waves--bl" data-corner aria-hidden="true"></div>
+    <div class="container">
+      <header class="section-head reveal">
+        <h2 class="display-title" id="menu-title">Меню</h2>
+        <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
+      </header>
+
+      <div class="tabs reveal">
+        <div class="tabs__list" role="tablist" aria-label="Категории меню" data-menu-tabs></div>
+      </div>
+
+      <div class="menu__legend" aria-label="Обозначения">
+        <span><svg aria-hidden="true"><use href="#i-meat"/></svg>мясо</span>
+        <span><svg aria-hidden="true"><use href="#i-fish"/></svg>рыба</span>
+        <span><svg aria-hidden="true"><use href="#i-spicy"/></svg>острое</span>
+        <span><svg aria-hidden="true"><use href="#i-hit"/></svg>хит</span>
+      </div>
+
+      <div class="menu__panel" role="tabpanel" tabindex="0" data-menu-panel></div>
+
+      <div class="menu__footer">
+        <a class="btn btn--outline" href="assets/menu.pdf" download>
+          <svg aria-hidden="true"><use href="#i-download"/></svg> Скачать меню (PDF)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ МАГАЗИН ============ -->
+  <section class="section shop section--light" id="shop" aria-labelledby="shop-title">
+    <div class="container">
+      <header class="section-head reveal">
+        <p class="eyebrow">На развес и в упаковках</p>
+        <h2 class="section-title" id="shop-title">Магазин</h2>
+        <span class="brandline" aria-hidden="true"><i></i></span>
+        <p class="section-lead">Креветки, рыба, краб, икра и морепродукты. Добавляйте в ту же корзину, что и блюда ресторана, — привезём вместе. Весовой товар считаем по факту взвешивания.</p>
+      </header>
+
+      <div class="filters reveal" role="group" aria-label="Фильтр каталога" data-shop-filters></div>
+
+      <div class="shop__grid" data-shop-grid aria-live="polite"></div>
+      <div class="shop__more">
+        <button class="btn btn--navy" type="button" data-shop-more hidden>Показать ещё</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ДОСТАВКА ============ -->
+  <section class="section delivery" id="delivery" aria-labelledby="delivery-title">
+    <div class="corner-waves corner-waves--tr" data-corner aria-hidden="true"></div>
+    <div class="container">
+      <header class="section-head reveal">
+        <p class="eyebrow">К вам домой</p>
+        <h2 class="section-title" id="delivery-title">Доставка</h2>
+        <span class="brandline" aria-hidden="true"><i></i></span>
+      </header>
+
+      <div class="delivery__grid">
+        <dl class="facts reveal">
+          <div class="fact"><dt><svg aria-hidden="true"><use href="#i-pin"/></svg>Зона доставки</dt><dd>[зона доставки]</dd></div>
+          <div class="fact"><dt><svg aria-hidden="true"><use href="#i-clock"/></svg>Время доставки</dt><dd>[время доставки]</dd></div>
+          <div class="fact"><dt><svg aria-hidden="true"><use href="#i-bag"/></svg>Минимальный заказ</dt><dd>от 000 ₽</dd></div>
+          <div class="fact"><dt><svg aria-hidden="true"><use href="#i-truck"/></svg>Стоимость</dt><dd>000 ₽, от 000 ₽ — бесплатно</dd></div>
+        </dl>
+
+        <figure class="zone-map reveal" aria-label="Схема зон доставки">
+          <svg viewBox="0 0 400 300" role="img" aria-labelledby="zone-map-title">
+            <title id="zone-map-title">Схема: ресторан в центре, вокруг две зоны доставки</title>
+            <g fill="none" stroke="currentColor" stroke-width="1">
+              <path class="zone-map__street" d="M0 120 C80 110 160 150 240 140 S360 100 400 110"/>
+              <path class="zone-map__street" d="M95 0 C110 80 80 170 115 300"/>
+              <path class="zone-map__street" d="M0 230 C100 200 260 240 400 190"/>
+              <ellipse class="zone-map__z2" cx="195" cy="150" rx="175" ry="125" stroke-dasharray="4 6"/>
+              <ellipse class="zone-map__z1" cx="195" cy="150" rx="95" ry="70"/>
+            </g>
+            <circle cx="195" cy="150" r="5" class="zone-map__pin"/>
+            <text x="195" y="174" text-anchor="middle" class="zone-map__label">MясоMore</text>
+            <text x="195" y="104" text-anchor="middle" class="zone-map__zone">Зона 1 · [время]</text>
+            <text x="195" y="56" text-anchor="middle" class="zone-map__zone">Зона 2 · [время]</text>
+          </svg>
+          <figcaption>Схема условная. Точные границы зон уточняйте у оператора.</figcaption>
+        </figure>
+      </div>
+
+      <ol class="steps reveal">
+        <li class="step">
+          <span class="step__num">01</span>
+          <h3 class="step__title">Выберите</h3>
+          <p>Блюда из меню ресторана и продукты из магазина — в одну корзину.</p>
+        </li>
+        <li class="step">
+          <span class="step__num">02</span>
+          <h3 class="step__title">Оформите</h3>
+          <p>Укажите адрес и удобное время или выберите самовывоз.</p>
+        </li>
+        <li class="step">
+          <span class="step__num">03</span>
+          <h3 class="step__title">Получите</h3>
+          <p>Курьер привезёт заказ в термосумке, охлаждённое — отдельно.</p>
+        </li>
+      </ol>
+
+      <div class="payments reveal">
+        <h3 class="payments__title">Способы оплаты</h3>
+        <ul class="payments__list">
+          <li><svg aria-hidden="true"><use href="#i-card"/></svg>Картой онлайн</li>
+          <li><svg aria-hidden="true"><use href="#i-card"/></svg>Картой курьеру</li>
+          <li><svg aria-hidden="true"><use href="#i-qr"/></svg>СБП</li>
+          <li><svg aria-hidden="true"><use href="#i-cash"/></svg>Наличными</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ О НАС ============ -->
+  <section class="section about" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about__grid">
+        <div class="about__text reveal">
+          <p class="eyebrow">О нас</p>
+          <h2 class="section-title section-title--left" id="about-title">Две стихии на одном столе</h2>
+          <span class="brandline brandline--left" aria-hidden="true"><i></i></span>
+          <p>MясоMore начался с простой мысли: хороший стейк и свежая рыба не спорят друг с другом, а дополняют. Земля и море, гриль и лёд, сочность и лёгкость — мы собрали их в одном зале, на одной витрине и в одном заказе.</p>
+          <p>Мы готовим то, что сами продаём, и продаём то, что сами готовим. Поэтому каждый продукт проходит две проверки: у мясника или рыбника за прилавком и у повара на кухне.</p>
+
+          <ul class="pillars">
+            <li>
+              <h3>Поставщики</h3>
+              <p>Работаем напрямую с фермерскими хозяйствами и рыболовными артелями. [Поставщики уточняются.]</p>
+            </li>
+            <li>
+              <h3>Качество</h3>
+              <p>Ветеринарные документы на каждую партию, контроль температуры от приёмки до вашего стола.</p>
+            </li>
+            <li>
+              <h3>Свежесть</h3>
+              <p>Небольшие партии и частые поставки: на витрине только то, что пришло недавно.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="about__photos">
+          <figure class="photo photo--3x4 reveal" data-label="Фото: зал">
+            <img src="assets/photos/hall.webp" alt="Зал с мягкими диванами и большим рисунком осьминога на стене" loading="lazy" decoding="async">
+          </figure>
+          <figure class="photo photo--3x4 reveal" data-label="Фото: витрина">
+            <img src="assets/photos/showcase.webp" alt="Барная стойка с витриной морепродуктов в синей подсветке" loading="lazy" decoding="async">
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ БРОНИРОВАНИЕ ============ -->
+  <section class="section booking" id="booking" aria-labelledby="booking-title">
+    <div class="waves waves--top waves--soft" data-waves="4" aria-hidden="true"></div>
+    <div class="container container--narrow">
+      <header class="section-head reveal">
+        <h2 class="display-title display-title--sm" id="booking-title">Бронирование</h2>
+        <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <p class="section-lead">Оставьте заявку — мы перезвоним, чтобы подтвердить стол.</p>
+      </header>
+
+      <form class="form booking__form reveal" id="booking-form" novalidate>
+        <div class="form__grid">
+          <div class="field">
+            <label for="b-name">Имя</label>
+            <input id="b-name" name="name" type="text" autocomplete="name" required minlength="2" aria-describedby="b-name-err">
+            <p class="field__error" id="b-name-err"></p>
+          </div>
+          <div class="field">
+            <label for="b-phone">Телефон</label>
+            <input id="b-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required data-phone aria-describedby="b-phone-err">
+            <p class="field__error" id="b-phone-err"></p>
+          </div>
+          <div class="field">
+            <label for="b-date">Дата</label>
+            <input id="b-date" name="date" type="date" required aria-describedby="b-date-err">
+            <p class="field__error" id="b-date-err"></p>
+          </div>
+          <div class="field">
+            <label for="b-time">Время</label>
+            <input id="b-time" name="time" type="time" required step="900" aria-describedby="b-time-err">
+            <p class="field__error" id="b-time-err"></p>
+          </div>
+          <div class="field">
+            <label for="b-guests">Количество гостей</label>
+            <input id="b-guests" name="guests" type="number" min="1" max="20" value="2" required aria-describedby="b-guests-err">
+            <p class="field__error" id="b-guests-err"></p>
+          </div>
+          <div class="field field--full">
+            <label for="b-comment">Комментарий <span class="field__opt">(необязательно)</span></label>
+            <textarea id="b-comment" name="comment" rows="3" placeholder="Повод, пожелания по столу, детский стул…"></textarea>
+          </div>
+        </div>
+        <p class="form__note">Нажимая «Забронировать», вы соглашаетесь с <a href="privacy.html">политикой конфиденциальности</a>.</p>
+        <button class="btn btn--primary form__submit" type="submit">Забронировать</button>
+        <p class="form__status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ КОНТАКТЫ ============ -->
+  <section class="section contacts" id="contacts" aria-labelledby="contacts-title">
+    <div class="container">
+      <header class="section-head reveal">
+        <h2 class="section-title" id="contacts-title">Контакты</h2>
+        <span class="brandline" aria-hidden="true"><i></i></span>
+      </header>
+      <div class="contacts__grid">
+        <div class="contacts__info reveal">
+          <div class="contact-row">
+            <h3>Адрес</h3>
+            <p>Санкт-Петербург, Московский проспект, 183–185, литер Б</p>
+            <p class="contact-row__note">ЖК «Граф Орлов», вход со стороны Варшавской улицы</p>
+          </div>
+          <div class="contact-row">
+            <h3>Телефон</h3>
+            <p><a href="tel:+79052226272">+7 905 222-62-72</a></p>
+          </div>
+          <div class="contact-row">
+            <h3>Часы работы</h3>
+            <p>Ежедневно с 10:00 до 22:00</p>
+            <p class="contact-row__note">Ресторан, завтраки, магазин и доставка</p>
+          </div>
+          <div class="contact-row">
+            <h3>Мы в соцсетях</h3>
+            <ul class="socials">
+              <li><a href="https://t.me/MiasoMore" target="_blank" rel="noopener">Telegram · @MiasoMore</a></li>
+            </ul>
+          </div>
+          <div class="contact-offer">
+            <span class="contact-offer__value">−10%</span>
+            <p>Скидка для жителей ЖК «Граф Орлов»</p>
+          </div>
+        </div>
+        <div class="map reveal">
+          <iframe
+            src="https://yandex.ru/map-widget/v1/?text=%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%2C%20183-185%D0%91&amp;z=16"
+            title="Карта: Московский проспект, 183–185, литер Б"
+            loading="lazy" allowfullscreen></iframe>
+          <a class="map__link" href="https://yandex.ru/maps/?text=%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%2C%20183-185%D0%91" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ ПОДВАЛ ============ -->
+<footer class="footer">
+  <div class="waves waves--top waves--soft" data-waves="5" aria-hidden="true"></div>
+  <div class="container footer__inner">
+    <img class="footer__logo" src="assets/logo-light.png" alt="MясоMore — ресторан, магазин, доставка" width="576" height="509" loading="lazy">
+    <nav class="footer__nav" aria-label="Меню в подвале">
+      <a href="#restaurant">Ресторан</a>
+      <a href="#menu">Меню</a>
+      <a href="#shop">Магазин</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#about">О нас</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <span class="brandline" aria-hidden="true"><i></i></span>
+    <div class="footer__bottom">
+      <p>© <span data-year></span> MясоMore</p>
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ КОРЗИНА ============ -->
+<div class="overlay" data-overlay hidden></div>
+<aside class="cart" id="cart" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>
+  <div class="cart__head">
+    <h2 class="cart__title" id="cart-title">Корзина</h2>
+    <button class="icon-btn" type="button" data-cart-close aria-label="Закрыть корзину"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+
+  <!-- Шаг 1: список -->
+  <div class="cart__view" data-view="list">
+    <div class="cart__body">
+      <ul class="cart__items" data-cart-items></ul>
+      <div class="cart__empty" data-cart-empty>
+        <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <p>Корзина пока пуста.</p>
+        <a class="link-arrow" href="#menu" data-cart-close>Открыть меню <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+    <div class="cart__foot" data-cart-foot>
+      <div class="cart__total"><span>Итого</span><span class="dots" aria-hidden="true"></span><strong data-cart-total>000 ₽</strong></div>
+      <p class="cart__note" data-cart-note hidden>Весовой товар взвешиваем при сборке — итоговая сумма может немного отличаться.</p>
+      <button class="btn btn--primary btn--block" type="button" data-to-checkout>Оформить заказ</button>
+    </div>
+  </div>
+
+  <!-- Шаг 2: оформление -->
+  <div class="cart__view" data-view="checkout" hidden>
+    <form class="form cart__body checkout" id="checkout-form" novalidate>
+      <button class="link-back" type="button" data-to-list>← Вернуться к корзине</button>
+
+      <fieldset class="field-group">
+        <legend>Контакты</legend>
+        <div class="field">
+          <label for="c-name">Имя</label>
+          <input id="c-name" name="name" type="text" autocomplete="name" required minlength="2" aria-describedby="c-name-err">
+          <p class="field__error" id="c-name-err"></p>
+        </div>
+        <div class="field">
+          <label for="c-phone">Телефон</label>
+          <input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required data-phone aria-describedby="c-phone-err">
+          <p class="field__error" id="c-phone-err"></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Получение</legend>
+        <div class="segmented">
+          <label><input type="radio" name="method" value="delivery" checked><span>Доставка</span></label>
+          <label><input type="radio" name="method" value="pickup"><span>Самовывоз</span></label>
+        </div>
+        <div class="field" data-address>
+          <label for="c-address">Адрес</label>
+          <input id="c-address" name="address" type="text" autocomplete="street-address" placeholder="Улица, дом, квартира" aria-describedby="c-address-err">
+          <p class="field__error" id="c-address-err"></p>
+        </div>
+        <div class="field">
+          <label for="c-time">Время</label>
+          <select id="c-time" name="time">
+            <option value="asap">Как можно скорее</option>
+            <option value="later">Ко времени (уточним по телефону)</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Оплата</legend>
+        <div class="field">
+          <label for="c-pay" class="visually-hidden">Способ оплаты</label>
+          <select id="c-pay" name="pay">
+            <option>Картой онлайн</option>
+            <option>Картой курьеру</option>
+            <option>СБП</option>
+            <option>Наличными</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="c-comment">Комментарий <span class="field__opt">(необязательно)</span></label>
+          <textarea id="c-comment" name="comment" rows="2"></textarea>
+        </div>
+      </fieldset>
+
+      <div class="cart__total"><span>К оплате</span><span class="dots" aria-hidden="true"></span><strong data-cart-total>000 ₽</strong></div>
+      <button class="btn btn--primary btn--block" type="submit">Подтвердить заказ</button>
+      <p class="form__note">Нажимая кнопку, вы соглашаетесь с <a href="privacy.html">политикой конфиденциальности</a>.</p>
+    </form>
+  </div>
+
+  <!-- Шаг 3: готово -->
+  <div class="cart__view cart__done" data-view="done" hidden>
+    <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
+    <h3>Спасибо, заказ принят</h3>
+    <p>Мы перезвоним в ближайшее время, чтобы подтвердить детали.</p>
+    <button class="btn btn--outline" type="button" data-cart-close>Закрыть</button>
+  </div>
+</aside>
+
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+
+<script src="js/data.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
