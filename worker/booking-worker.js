@@ -13,6 +13,8 @@
  *   GET  /availability?date=YYYY-MM-DD  — занятость мест на день (без личных данных)
  *   POST /book                          — создать бронь
  *   POST /tg                            — вебхук Telegram (кнопки администратора)
+ *   scheduled (Cron, раз в минуту)      — через 15 минут после начала брони спрашивает
+ *                                         администратора: «Гости пришли?»
  */
 
 // ---------- Правила ресторана ----------
@@ -25,6 +27,7 @@ const LAST_START = CLOSE - 60;      // последняя бронь — за ч
 const LATE_MINUTES = 15;            // столько ждём опоздавших
 const HORIZON_DAYS = 30;            // бронируем не дальше чем на 30 дней
 const MAX_PER_PHONE_PER_DAY = 2;    // защита от «занять весь зал»
+const REMIND_WINDOW = 60;           // напоминаем только о бронях, начавшихся за последний час
 
 // Схема зала: стол бронируется целиком, места у стоек — по одному
 const RESOURCES = {
@@ -61,10 +64,21 @@ const SCHEMA = [
    END`,
 ];
 
+// Колонки, добавленные позже: в существующую базу дописываются по одной
+// (если колонка уже есть, SQLite вернёт ошибку — её пропускаем).
+const MIGRATIONS = [
+  `ALTER TABLE bookings ADD COLUMN reminded INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE bookings ADD COLUMN arrival TEXT`,          // arrived | no_show
+];
+
 const schemaReady = new WeakMap();
 function ensureSchema(db) {
   if (!schemaReady.has(db)) {
-    schemaReady.set(db, db.batch(SCHEMA.map(sql => db.prepare(sql))).catch(err => { schemaReady.delete(db); throw err; }));
+    const job = (async () => {
+      await db.batch(SCHEMA.map(sql => db.prepare(sql)));
+      for (const sql of MIGRATIONS) await db.prepare(sql).run().catch(() => {});
+    })().catch(err => { schemaReady.delete(db); throw err; });
+    schemaReady.set(db, job);
   }
   return schemaReady.get(db);
 }
@@ -73,8 +87,8 @@ function ensureSchema(db) {
 const DAYS = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
-function nowMsk() {
-  const d = new Date(Date.now() + TZ_OFFSET_MIN * 60000);
+function nowMsk(ms = Date.now()) {
+  const d = new Date(ms + TZ_OFFSET_MIN * 60000);
   return { date: d.toISOString().slice(0, 10), min: d.getUTCHours() * 60 + d.getUTCMinutes() };
 }
 function addDays(date, n) {
@@ -266,23 +280,40 @@ async function handleTelegram(request, env, json) {
   const adminChat = String(env.CHAT_ID);
 
   const cq = u.callback_query;
-  if (cq && String(cq.message && cq.message.chat && cq.message.chat.id) === adminChat && /^cancel:/.test(cq.data || '')) {
-    const id = cq.data.slice(7);
+  const m = cq && /^(cancel|arrived|noshow):(.+)$/.exec(cq.data || '');
+  if (m && String(cq.message && cq.message.chat && cq.message.chat.id) === adminChat) {
+    const [, action, id] = m;
     const row = await db.prepare(`SELECT * FROM bookings WHERE id = ?`).bind(id).first();
-    if (row && row.status === 'confirmed') {
+    let answer = 'Бронь не найдена';
+    let header = null;
+    if (row && row.status !== 'confirmed') {
+      answer = 'Эта бронь уже закрыта';
+    } else if (row && action === 'noshow' && row.arrival === 'arrived') {
+      answer = 'Гости уже отмечены как пришедшие — бронь не снята';
+    } else if (row && action === 'arrived') {
+      await db.prepare(`UPDATE bookings SET arrival = 'arrived' WHERE id = ?`).bind(id).run();
+      answer = 'Отмечено: гости пришли';
+      header = '✅ <b>Гости пришли</b>';
+    } else if (row) {
+      const noShow = action === 'noshow';
       await db.batch([
-        db.prepare(`UPDATE bookings SET status = 'cancelled' WHERE id = ?`).bind(id),
+        db.prepare(`UPDATE bookings SET status = ?, arrival = ? WHERE id = ?`)
+          .bind(noShow ? 'no_show' : 'cancelled', noShow ? 'no_show' : row.arrival, id),
         db.prepare(`UPDATE booking_items SET status = 'cancelled' WHERE booking_id = ?`).bind(id),
       ]);
+      answer = noShow ? 'Бронь снята — места свободны' : 'Бронь отменена';
+      header = noShow
+        ? '🚫 <b>Гости не пришли</b> — бронь снята, места снова свободны'
+        : '❌ <b>Бронь отменена</b> — места снова свободны';
     }
-    if (row) {
+    if (header) {
       const b = { ...row, start: row.start_min, end: row.end_min, resources: row.resources.split(',') };
       await sendTelegram(env, 'editMessageText', {
         chat_id: adminChat, message_id: cq.message.message_id, parse_mode: 'HTML',
-        text: bookingText(id, b, '❌ <b>Бронь отменена</b> — места снова свободны'),
+        text: bookingText(id, b, header),
       });
     }
-    await sendTelegram(env, 'answerCallbackQuery', { callback_query_id: cq.id, text: row ? 'Бронь отменена' : 'Бронь не найдена' });
+    await sendTelegram(env, 'answerCallbackQuery', { callback_query_id: cq.id, text: answer });
     return json({ ok: true });
   }
 
@@ -292,13 +323,57 @@ async function handleTelegram(request, env, json) {
     const { results } = await db.prepare(
       `SELECT * FROM bookings WHERE date = ? AND status = 'confirmed' ORDER BY start_min`).bind(date).all();
     const lines = results.map(r =>
-      `${hhmm(r.start_min)}–${hhmm(r.end_min)} · ${r.resources.split(',').map(x => RESOURCES[x] ? RESOURCES[x].label : x).join(', ')} · ${r.guests} гост. · ${esc(r.name)} +${r.phone}`);
+      `${r.arrival === 'arrived' ? '✅ ' : ''}${hhmm(r.start_min)}–${hhmm(r.end_min)} · ${r.resources.split(',').map(x => RESOURCES[x] ? RESOURCES[x].label : x).join(', ')} · ${r.guests} гост. · ${esc(r.name)} +${r.phone}`);
     await sendTelegram(env, 'sendMessage', {
       chat_id: adminChat, parse_mode: 'HTML',
       text: `📋 <b>Брони на ${humanDate(date)}</b>\n\n${lines.length ? lines.join('\n') : 'Броней нет.'}`,
     });
   }
   return json({ ok: true });
+}
+
+// ---------- Напоминание «Гости пришли?» (Cron) ----------
+async function remindArrivals(env, ms = Date.now()) {
+  if (!env.DB) return 0;
+  const db = env.DB;
+  await ensureSchema(db);
+  const now = nowMsk(ms);
+  const due = now.min - LATE_MINUTES;   // брони, у которых 15 минут ожидания уже прошли
+  const { results } = await db.prepare(
+    `SELECT * FROM bookings
+     WHERE date = ? AND status = 'confirmed' AND reminded = 0 AND arrival IS NULL
+       AND start_min <= ? AND start_min > ?
+     ORDER BY start_min`).bind(now.date, due, due - REMIND_WINDOW).all();
+
+  let sent = 0;
+  for (const r of results) {
+    // Сначала «забираем» бронь, потом пишем: если проверка вдруг запустится дважды,
+    // напоминание всё равно уйдёт один раз.
+    const claim = await db.prepare(`UPDATE bookings SET reminded = 1 WHERE id = ? AND reminded = 0`).bind(r.id).run();
+    const changes = claim && (claim.meta ? claim.meta.changes : claim.changes);
+    if (!changes) continue;
+    const places = r.resources.split(',').map(x => RESOURCES[x] ? RESOURCES[x].label : x).join(', ');
+    await sendTelegram(env, 'sendMessage', {
+      chat_id: env.CHAT_ID,
+      parse_mode: 'HTML',
+      text: [
+        `⏰ <b>${hhmm(r.start_min + LATE_MINUTES)} — гости по брони на ${hhmm(r.start_min)} пришли?</b>`,
+        '',
+        `🪑 ${esc(places)}`,
+        `👥 Гостей: ${r.guests}`,
+        `👤 ${esc(r.name)}`,
+        `📞 +${r.phone}`,
+        '',
+        'Если не пришли — нажмите «Не пришли», и места сразу освободятся на сайте.',
+      ].join('\n'),
+      reply_markup: { inline_keyboard: [[
+        { text: '✅ Пришли', callback_data: `arrived:${r.id}` },
+        { text: '🚫 Не пришли — освободить', callback_data: `noshow:${r.id}` },
+      ]] },
+    }).catch(() => {});
+    sent++;
+  }
+  return sent;
 }
 
 // ---------- Точка входа ----------
@@ -321,6 +396,12 @@ export default {
       return json({ ok: false, error: 'server' }, 500);
     }
   },
+
+  // Cron Trigger (Settings → Trigger events → Cron: каждую минуту)
+  async scheduled(event, env, ctx) {
+    const job = remindArrivals(env, event && event.scheduledTime ? event.scheduledTime : Date.now());
+    if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
+  },
 };
 
-export const _internal = { RESOURCES, validateBooking, nowMsk, hhmm, OPEN, CLOSE, DURATION, LAST_START, STEP };
+export const _internal = { RESOURCES, validateBooking, nowMsk, hhmm, remindArrivals, OPEN, CLOSE, DURATION, LAST_START, STEP };

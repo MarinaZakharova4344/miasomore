@@ -152,3 +152,87 @@ test('вебхук без секрета отклоняется', async () => {
   const r = await worker.fetch(new Request('https://w.dev/tg', { method: 'POST', body: '{}' }), env, {});
   assert.equal(r.status, 403);
 });
+
+// ---------- Напоминание «Гости пришли?» ----------
+function mockTelegram() {
+  const calls = [];
+  const orig = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    calls.push({ method: String(url).split('/').pop(), body: JSON.parse(opts.body) });
+    return new Response(JSON.stringify({ ok: true, result: {} }), { status: 200 });
+  };
+  return { calls, restore: () => { globalThis.fetch = orig; } };
+}
+const mskMs = (date, hh, mm) => {
+  const [y, m, d] = date.split('-').map(Number);
+  return Date.UTC(y, m - 1, d, hh, mm) - 180 * 60000;
+};
+const tg = (data) => worker.fetch(new Request('https://w.dev/tg', {
+  method: 'POST',
+  headers: { 'X-Telegram-Bot-Api-Secret-Token': 's3cret', 'Content-Type': 'application/json' },
+  body: JSON.stringify({ callback_query: { id: 'q', data, message: { message_id: 7, chat: { id: 42 } } } }),
+}), env, {});
+
+test('через 15 минут после начала приходит один вопрос «Гости пришли?»', async () => {
+  Object.assign(env, { BOT_TOKEN: 't', CHAT_ID: '42', TG_SECRET: 's3cret' });
+  const t = mockTelegram();
+  try {
+    await book({ resources: ['T3'], guests: 3, time: '19:00' });
+    t.calls.length = 0;
+    assert.equal(await _internal.remindArrivals(env, mskMs(tomorrow, 19, 14)), 0, 'в 19:14 ещё рано');
+    assert.equal(await _internal.remindArrivals(env, mskMs(tomorrow, 19, 15)), 1, 'в 19:15 — напоминание');
+    assert.equal(await _internal.remindArrivals(env, mskMs(tomorrow, 19, 16)), 0, 'повторно не шлём');
+    const msg = t.calls.find(c => c.method === 'sendMessage');
+    assert.match(msg.body.text, /19:15 — гости по брони на 19:00 пришли\?/);
+    const buttons = msg.body.reply_markup.inline_keyboard[0].map(b => b.callback_data.split(':')[0]);
+    assert.deepEqual(buttons, ['arrived', 'noshow']);
+  } finally { t.restore(); }
+});
+
+test('о бронях, начавшихся больше часа назад, не напоминаем', async () => {
+  Object.assign(env, { BOT_TOKEN: 't', CHAT_ID: '42' });
+  const t = mockTelegram();
+  try {
+    await book({ resources: ['A1'], guests: 1, time: '12:00' });
+    assert.equal(await _internal.remindArrivals(env, mskMs(tomorrow, 14, 0)), 0);
+  } finally { t.restore(); }
+});
+
+test('«Не пришли» снимает бронь и освобождает места', async () => {
+  Object.assign(env, { BOT_TOKEN: 't', CHAT_ID: '42', TG_SECRET: 's3cret' });
+  const t = mockTelegram();
+  try {
+    const { id } = await (await book({ resources: ['T1'], guests: 2, time: '18:00' })).json();
+    await _internal.remindArrivals(env, mskMs(tomorrow, 18, 15));
+    assert.equal((await tg(`noshow:${id}`)).status, 200);
+    const row = await env.DB.prepare(`SELECT status, arrival FROM bookings WHERE id = ?`).bind(id).first();
+    assert.deepEqual({ ...row }, { status: 'no_show', arrival: 'no_show' });
+    const edit = t.calls.find(c => c.method === 'editMessageText');
+    assert.match(edit.body.text, /Гости не пришли/);
+    assert.equal((await book({ resources: ['T1'], guests: 2, time: '18:30' })).status, 200, 'стол снова свободен');
+  } finally { t.restore(); }
+});
+
+test('«Пришли» оставляет бронь, повторное нажатие ничего не ломает', async () => {
+  Object.assign(env, { BOT_TOKEN: 't', CHAT_ID: '42', TG_SECRET: 's3cret' });
+  const t = mockTelegram();
+  try {
+    const { id } = await (await book({ resources: ['O2'], guests: 1, time: '18:00' })).json();
+    await tg(`arrived:${id}`);
+    await tg(`noshow:${id}`); // нажали не ту кнопку после «Пришли» — бронь остаётся
+    const row = await env.DB.prepare(`SELECT status, arrival FROM bookings WHERE id = ?`).bind(id).first();
+    assert.equal(row.arrival, 'arrived');
+    assert.equal((await book({ resources: ['O2'], guests: 1, time: '18:30' })).status, 409, 'место по-прежнему занято');
+  } finally { t.restore(); }
+});
+
+test('старая база без новых колонок обновляется сама', async () => {
+  env.DB.db.exec(`CREATE TABLE bookings (
+    id TEXT PRIMARY KEY, date TEXT NOT NULL, start_min INTEGER NOT NULL, end_min INTEGER NOT NULL,
+    name TEXT NOT NULL, phone TEXT NOT NULL, guests INTEGER NOT NULL, comment TEXT,
+    resources TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'confirmed',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
+  assert.equal((await book({ resources: ['A2'], guests: 1 })).status, 200);
+  const cols = env.DB.db.prepare(`PRAGMA table_info(bookings)`).all().map(c => c.name);
+  assert.ok(cols.includes('reminded') && cols.includes('arrival'));
+});
