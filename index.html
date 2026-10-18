@@ -175,7 +175,7 @@
       <div class="directions__grid">
         <article class="dir-card reveal">
           <figure class="photo photo--4x5" data-label="Фото: зал ресторана">
-            <img src="assets/photos/restaurant.webp" alt="Зал ресторана MясоMore: деревянные столы, белые фактурные стены, витрина с подсветкой" loading="lazy" decoding="async">
+            <img src="assets/photos/hall.webp" alt="Зал ресторана MясоMore: мягкие диваны и большой рисунок осьминога на стене" loading="lazy" decoding="async">
           </figure>
           <div class="dir-card__body">
             <h3 class="dir-card__title">Ресторан</h3>
@@ -186,7 +186,7 @@
 
         <article class="dir-card reveal">
           <figure class="photo photo--4x5" data-label="Фото: витрина магазина">
-            <img src="assets/photos/shop.webp" alt="Креветки на льду" loading="lazy" decoding="async">
+            <img src="assets/photos/showcase.webp" alt="Витрина с морепродуктами в синей подсветке" loading="lazy" decoding="async">
           </figure>
           <div class="dir-card__body">
             <h3 class="dir-card__title">Магазин</h3>
@@ -197,7 +197,7 @@
 
         <article class="dir-card reveal">
           <figure class="photo photo--4x5" data-label="Фото: заказ на доставку">
-            <img src="assets/photos/delivery.webp" alt="Паэлья с морепродуктами в сковороде" loading="lazy" decoding="async">
+            <img src="assets/photos/delivery.webp" alt="Ролл «Филадельфия» на белой подаче" loading="lazy" decoding="async">
           </figure>
           <div class="dir-card__body">
             <h3 class="dir-card__title">Доставка</h3>
@@ -354,10 +354,10 @@
 
         <div class="about__photos">
           <figure class="photo photo--3x4 reveal" data-label="Фото: зал">
-            <img src="assets/photos/hall.webp" alt="Зал с мягкими диванами и большим рисунком осьминога на стене" loading="lazy" decoding="async">
+            <img src="assets/photos/restaurant.webp" alt="Зал ресторана: деревянные столы, белые фактурные стены, витрина с подсветкой" loading="lazy" decoding="async">
           </figure>
-          <figure class="photo photo--3x4 reveal" data-label="Фото: витрина">
-            <img src="assets/photos/showcase.webp" alt="Барная стойка с витриной морепродуктов в синей подсветке" loading="lazy" decoding="async">
+          <figure class="photo photo--3x4 reveal" data-label="Фото: блюда">
+            <img src="assets/photos/dishes.webp" alt="Антипасти: хамон, сыры, оливки и вяленые томаты" loading="lazy" decoding="async">
           </figure>
         </div>
       </div>
@@ -578,6 +578,14 @@
     <button class="btn btn--outline" type="button" data-cart-close>Закрыть</button>
   </div>
 </aside>
+
+<dialog class="lightbox" id="lightbox" aria-label="Фото блюда">
+  <figure class="lightbox__figure">
+    <img alt="">
+    <figcaption></figcaption>
+  </figure>
+  <button class="icon-btn lightbox__close" type="button" data-lb-close aria-label="Закрыть фото"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+</dialog>
 
 <div class="toast" role="status" aria-live="polite" data-toast></div>
 

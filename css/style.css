@@ -492,6 +492,23 @@ ul, ol { padding: 0; list-style: none; }
 }
 @media (min-width: 768px) { .dish { grid-template-columns: 96px 1fr; gap: 20px; } }
 .dish.dish--text { grid-template-columns: 1fr; }
+@media (min-width: 768px) { .dish { grid-template-columns: 112px 1fr; } .dish.dish--text { grid-template-columns: 1fr; } }
+button.dish__photo { display: block; width: 100%; padding: 0; cursor: zoom-in; }
+button.dish__photo img { transition: transform .6s var(--ease); }
+button.dish__photo:hover img { transform: scale(1.06); }
+
+/* Просмотр фото блюда */
+.lightbox {
+  width: min(92vw, 1100px); max-width: none; max-height: 92vh;
+  padding: 0; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg); color: var(--cream);
+  overflow: visible;
+}
+.lightbox::backdrop { background: rgba(1, 12, 26, .85); }
+.lightbox[open] { animation: fade-in .3s var(--ease); }
+.lightbox__figure img { width: 100%; max-height: calc(92vh - 64px); object-fit: contain; background: var(--bg-raised); }
+.lightbox__figure figcaption { padding: 14px 20px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.lightbox__close { position: absolute; top: 8px; right: 8px; background: rgba(1, 23, 48, .7); border-radius: 50%; }
 .dish__meta { flex-wrap: wrap; }
 .dish__add { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .dish__select {
@@ -569,6 +586,20 @@ ul, ol { padding: 0; list-style: none; }
 .product__name { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.2; color: var(--navy); }
 .product__price { font-family: var(--serif); font-size: 20px; font-weight: 500; }
 .product__price small { font-family: var(--sans); font-size: 13px; color: var(--ink-muted); font-weight: 400; }
+/* Карточка магазина без фото */
+.product--text { border-top: 3px solid var(--navy); }
+.product__top {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 16px 18px 0;
+}
+.product__cat { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-muted); }
+.product__tag {
+  padding: 3px 8px; border: 1px solid rgba(13, 43, 91, .2); border-radius: var(--radius);
+  font-size: 11px; letter-spacing: .06em; color: var(--navy); white-space: nowrap;
+}
+.product--text .product__body { padding-top: 10px; }
+.product--text .product__name { font-size: 24px; }
+
 .product__prices { display: flex; flex-direction: column; gap: 2px; }
 .product__sub { font-size: 13px; line-height: 1.45; color: var(--ink-muted); }
 .product__controls { margin-top: auto; display: flex; gap: 8px; }

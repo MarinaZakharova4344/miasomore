@@ -312,7 +312,7 @@
       ].join('');
       return `
       <article class="dish${d.img ? '' : ' dish--text'}" style="animation-delay:${Math.min(i, 10) * 50}ms">
-        ${d.img ? `<figure class="dish__photo photo"><img src="${d.img}" alt="${esc(d.name)}" loading="lazy" decoding="async" width="360" height="360"></figure>` : ''}
+        ${d.img ? `<button class="dish__photo photo" type="button" data-zoom="${d.img.replace('.webp', '-lg.webp')}" data-title="${esc(d.name)}" aria-label="Фото крупно: ${esc(d.name)}"><img src="${d.img}" alt="" loading="lazy" decoding="async" width="360" height="360"></button>` : ''}
         <div class="dish__body">
         <div class="dish__line">
           <h3 class="dish__name">${esc(d.name)}</h3>
@@ -359,7 +359,26 @@
     if (n !== null) { e.preventDefault(); selectTab(tabs[n], true); }
   });
 
+  /* ---------- Просмотр фото блюда ---------- */
+  const lightbox = $('#lightbox');
+  const lbImg = $('img', lightbox);
+  const lbCap = $('figcaption', lightbox);
+
+  function openLightbox(src, title) {
+    lbImg.src = src;
+    lbImg.alt = title;
+    lbCap.textContent = title;
+    lightbox.showModal();
+    lock();
+  }
+  lightbox.addEventListener('close', () => { unlock(); lbImg.removeAttribute('src'); });
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox || e.target.closest('[data-lb-close]')) lightbox.close();
+  });
+
   panel.addEventListener('click', e => {
+    const zoom = e.target.closest('[data-zoom]');
+    if (zoom) { openLightbox(zoom.dataset.zoom, zoom.dataset.title); return; }
     const btn = e.target.closest('[data-dish]');
     if (!btn) return;
     let dish;
@@ -431,11 +450,14 @@
       const cat = CATS.find(c => c.id === p.cat);
       const opt = productOptions(p);
       return `
-      <article class="product" style="animation-delay:${Math.min(i % PAGE, 8) * 50}ms">
-        <figure class="photo photo--1x1" data-label="${esc(cat ? cat.title : '')}">
+      <article class="product${p.img ? '' : ' product--text'}" style="animation-delay:${Math.min(i % PAGE, 8) * 50}ms">
+        ${p.img ? `<figure class="photo photo--1x1" data-label="${esc(cat ? cat.title : '')}">
           ${p.badge ? `<span class="product__badge${p.badge === 'new' ? ' product__badge--new' : ''}">${BADGES[p.badge]}</span>` : ''}
-          ${p.img ? `<img src="${p.img}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : icon('i-fish', 'photo__icon')}
-        </figure>
+          <img src="${p.img}" alt="${esc(p.name)}" loading="lazy" decoding="async">
+        </figure>` : `<div class="product__top">
+          <span class="product__cat">${esc(cat ? cat.title : '')}</span>
+          ${p.badge ? `<span class="product__tag">${p.badge === 'frozen' ? '❄ ' : ''}${BADGES[p.badge]}</span>` : ''}
+        </div>`}
         <div class="product__body">
           <h3 class="product__name">${esc(p.name)}</h3>
           <div class="product__prices">${productPrice(p)}</div>
