@@ -924,3 +924,107 @@ button.dish__photo:focus-visible { outline: 1px solid var(--blue); outline-offse
 .contact-offer--dog { border-color: var(--line-strong); }
 .contact-offer--dog + .contact-offer { margin-top: 12px; }
 .contact-offer__icon { width: 36px; height: 36px; color: var(--blue); flex-shrink: 0; }
+
+/* ===================== Бронирование по схеме зала ===================== */
+.bk-step { border: 0; margin: 0 0 40px; padding: 0; min-width: 0; }
+.bk-step__title {
+  display: flex; align-items: center; gap: 14px; padding: 0; margin-bottom: 20px;
+  font-family: var(--serif); font-size: 28px; font-weight: 500;
+}
+.bk-step__num {
+  display: inline-grid; place-items: center; width: 36px; height: 36px;
+  border: 1px solid var(--line-strong); border-radius: 50%;
+  font-size: 18px; color: var(--blue); font-variant-numeric: lining-nums;
+}
+@media (min-width: 640px) { .bk-when { grid-template-columns: 1.2fr 1.6fr .8fr; } }
+.bk-hint { margin: -8px 0 16px; font-size: 14px; color: var(--muted); }
+
+.floor-scroll { overflow-x: auto; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scrollbar-width: thin; }
+.floor { position: relative; min-width: 600px; }
+.floor__svg { width: 100%; height: auto; display: block; font-family: var(--sans); }
+.floor__svg.is-loading .seat { opacity: .5; transition: opacity .3s; }
+
+.fl-floor { fill: rgba(236, 232, 225, .025); }
+.fl-wall { fill: none; stroke: var(--cream); stroke-width: 5; stroke-linejoin: round; opacity: .75; }
+.fl-wall--thin { stroke-width: 3; }
+.fl-wc { fill: rgba(140, 155, 176, .08); }
+.fl-window { stroke: var(--blue); stroke-width: 5; opacity: .8; }
+.fl-service { fill: rgba(140, 155, 176, .07); }
+.fl-fixture { fill: rgba(140, 155, 176, .1); stroke: rgba(140, 155, 176, .45); stroke-width: 1; }
+.fl-wood { fill: rgba(196, 150, 104, .22); stroke: rgba(196, 150, 104, .55); stroke-width: 1; }
+.fl-aquarium { fill: rgba(63, 134, 198, .2); stroke: var(--blue); stroke-width: 1.2; }
+.fl-door, .fl-arrow { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.fl-arrow { stroke-dasharray: none; stroke: var(--cream); stroke-width: 1.6; }
+.fl-label { fill: var(--muted); font-size: 13px; letter-spacing: .04em; }
+.fl-label--xs { font-size: 11px; }
+.fl-label--aqua { fill: #8fbde6; }
+.fl-label--strong { fill: var(--cream); font-size: 14px; font-weight: 600; letter-spacing: .14em; }
+
+.seat { cursor: pointer; outline: none; }
+.seat__ring { fill: transparent; stroke: transparent; stroke-width: 2; transition: stroke .2s; }
+.seat__top { fill: rgba(236, 232, 225, .06); stroke: var(--cream); stroke-width: 1.4; transition: fill .25s, stroke .25s; }
+.seat__chair, .seat__sofa { fill: rgba(236, 232, 225, .04); stroke: rgba(236, 232, 225, .75); stroke-width: 1.2; transition: fill .25s, stroke .25s; }
+.seat__num { fill: var(--cream); font-family: var(--serif); font-size: 22px; font-weight: 600; pointer-events: none; }
+.seat__num--sm { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .02em; }
+.seat__sub { fill: var(--muted); font-size: 10px; pointer-events: none; }
+
+.seat:hover .seat__top, .seat:hover .seat__chair, .seat:hover .seat__sofa { stroke: var(--blue); }
+.seat:focus-visible .seat__ring { stroke: var(--blue); stroke-dasharray: 4 3; }
+
+.seat.is-selected .seat__top { fill: var(--blue); stroke: var(--blue); }
+.seat.is-selected .seat__chair, .seat.is-selected .seat__sofa { fill: rgba(63, 134, 198, .55); stroke: var(--blue); }
+.seat.is-selected .seat__num { fill: var(--bg); }
+.seat.is-selected .seat__sub { fill: var(--bg); font-weight: 600; }
+
+.seat.is-taken { cursor: not-allowed; }
+.seat.is-taken .seat__top { fill: url(#fl-hatch); stroke: rgba(140, 155, 176, .5); stroke-dasharray: 3 3; }
+.seat.is-taken .seat__chair, .seat.is-taken .seat__sofa { fill: rgba(140, 155, 176, .12); stroke: rgba(140, 155, 176, .4); }
+.seat.is-taken .seat__num { fill: rgba(140, 155, 176, .7); }
+.seat.is-off { cursor: default; }
+.seat.is-off:not(.is-taken) .seat__top { stroke: rgba(236, 232, 225, .4); }
+
+.floor__veil {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px;
+  background: rgba(1, 23, 48, .82); text-align: center;
+}
+.floor__veil p { max-width: 380px; font-size: 15px; }
+.floor__veil a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+
+.floor-legend { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.floor-legend li { display: inline-flex; align-items: center; gap: 8px; }
+.floor-legend i { width: 16px; height: 16px; border-radius: 3px; border: 1.4px solid var(--cream); }
+.floor-legend .is-selected { background: var(--blue); border-color: var(--blue); }
+.floor-legend .is-taken {
+  border: 1.4px dashed rgba(140, 155, 176, .6);
+  background: repeating-linear-gradient(45deg, rgba(140, 155, 176, .35) 0 2px, transparent 2px 5px);
+}
+
+.bk-summary { margin-top: 14px; font-size: 15px; color: var(--muted); font-variant-numeric: lining-nums; }
+.bk-summary strong { color: var(--cream); font-weight: 500; }
+#b-seats-err:not(:empty) { margin-top: 8px; }
+
+.bk-rules {
+  display: flex; gap: 16px; align-items: flex-start;
+  margin: 0 0 40px; padding: 18px 20px;
+  border: 1px solid var(--blue); border-left-width: 3px; border-radius: var(--radius);
+  background: rgba(63, 134, 198, .07);
+  font-size: 15px; line-height: 1.6; font-variant-numeric: lining-nums;
+}
+.bk-rules svg { width: 26px; height: 26px; color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+.bk-rules strong { font-weight: 600; }
+.bk-rules a { color: var(--blue); white-space: nowrap; }
+
+.bk-done {
+  position: relative; z-index: 1; text-align: center;
+  padding: 48px 24px; border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: rgba(1, 23, 48, .5);
+}
+.bk-done:focus { outline: none; }
+.bk-done .sprig { margin: 0 auto 8px; }
+.bk-done__title { font-family: var(--serif); font-size: 36px; font-weight: 500; }
+.bk-done__when { margin-top: 12px; font-family: var(--serif); font-size: 26px; font-variant-numeric: lining-nums; }
+.bk-done__where { margin-top: 4px; color: var(--muted); }
+.bk-done__late { max-width: 460px; margin: 20px auto 28px; font-size: 14px; color: var(--muted); }
+.bk-done__late a { color: var(--blue); white-space: nowrap; }
+.floor-swipe { display: none; margin-bottom: 8px; font-size: 12px; letter-spacing: .06em; color: var(--blue); text-align: center; }
+@media (max-width: 640px) { .floor-swipe { display: block; } .floor { min-width: 560px; } }

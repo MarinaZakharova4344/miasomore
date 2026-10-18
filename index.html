@@ -26,7 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
   <!-- PT Serif — только для знака «&» в заголовке (классическая форма, как в логотипе) -->
   <link href="https://fonts.googleapis.com/css2?family=PT+Serif&text=%26&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261018-6">
+  <link rel="stylesheet" href="css/style.css?v=20261018-8">
 
   <script type="application/ld+json">
   {
@@ -382,48 +382,90 @@
       <header class="section-head reveal">
         <h2 class="display-title display-title--sm" id="booking-title">Бронирование</h2>
         <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
-        <p class="section-lead">Оставьте заявку — мы перезвоним, чтобы подтвердить стол.</p>
+        <p class="section-lead">Выберите дату, время и места прямо на схеме зала — бронь подтверждается сразу.</p>
       </header>
 
       <form class="form booking__form reveal" id="booking-form" novalidate>
-        <div class="form__grid">
-          <div class="field">
-            <label for="b-name">Имя</label>
-            <input id="b-name" name="name" type="text" autocomplete="name" required minlength="2" aria-describedby="b-name-err">
-            <p class="field__error" id="b-name-err"></p>
+        <fieldset class="bk-step">
+          <legend class="bk-step__title"><span class="bk-step__num">1</span>Когда</legend>
+          <div class="form__grid bk-when">
+            <div class="field">
+              <label for="b-date">Дата</label>
+              <input id="b-date" name="date" type="date" required aria-describedby="b-date-err">
+              <p class="field__error" id="b-date-err"></p>
+            </div>
+            <div class="field">
+              <label for="b-time">Время</label>
+              <select id="b-time" name="time" required aria-describedby="b-time-err" disabled>
+                <option value="">Сначала выберите дату</option>
+              </select>
+              <p class="field__error" id="b-time-err"></p>
+            </div>
+            <div class="field">
+              <label for="b-guests">Гостей</label>
+              <input id="b-guests" name="guests" type="number" min="1" max="19" value="2" required inputmode="numeric" aria-describedby="b-guests-err">
+              <p class="field__error" id="b-guests-err"></p>
+            </div>
           </div>
-          <div class="field">
-            <label for="b-phone">Телефон</label>
-            <input id="b-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required data-phone aria-describedby="b-phone-err">
-            <p class="field__error" id="b-phone-err"></p>
+        </fieldset>
+
+        <fieldset class="bk-step">
+          <legend class="bk-step__title"><span class="bk-step__num">2</span>Где сядете</legend>
+          <p class="bk-hint">Нажмите на стол или место у стойки. Стол бронируется целиком — до 4 гостей, места у стоек — по одному.</p>
+          <p class="floor-swipe" aria-hidden="true">← листайте схему: справа места у стоек →</p>
+          <div class="floor-scroll">
+            <div class="floor" data-floor role="group" aria-label="Схема зала"></div>
           </div>
-          <div class="field">
-            <label for="b-date">Дата</label>
-            <input id="b-date" name="date" type="date" required aria-describedby="b-date-err">
-            <p class="field__error" id="b-date-err"></p>
-          </div>
-          <div class="field">
-            <label for="b-time">Время</label>
-            <input id="b-time" name="time" type="time" required step="900" aria-describedby="b-time-err">
-            <p class="field__error" id="b-time-err"></p>
-          </div>
-          <div class="field">
-            <label for="b-guests">Количество гостей</label>
-            <input id="b-guests" name="guests" type="number" min="1" max="20" value="2" required aria-describedby="b-guests-err">
-            <p class="field__error" id="b-guests-err"></p>
-          </div>
-          <div class="hp" aria-hidden="true">
-            <label>Не заполняйте это поле <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-          </div>
-          <div class="field field--full">
-            <label for="b-comment">Комментарий <span class="field__opt">(необязательно)</span></label>
-            <textarea id="b-comment" name="comment" rows="3" placeholder="Повод, пожелания по столу, детский стул…"></textarea>
-          </div>
+          <ul class="floor-legend" aria-hidden="true">
+            <li><i class="is-free"></i>свободно</li>
+            <li><i class="is-selected"></i>ваш выбор</li>
+            <li><i class="is-taken"></i>занято</li>
+          </ul>
+          <p class="bk-summary" data-bk-summary aria-live="polite"></p>
+          <p class="field__error" id="b-seats-err" role="alert"></p>
+        </fieldset>
+
+        <div class="bk-rules" role="note">
+          <svg aria-hidden="true"><use href="#i-clock"/></svg>
+          <p><strong>Места за вами 3 часа.</strong> Пожалуйста, не опаздывайте: бронь держим <strong>15 минут</strong>, после этого места могут отдать другим гостям. Задерживаетесь — позвоните: <a href="tel:+79052226272">+7 905 222-62-72</a>.</p>
         </div>
+
+        <fieldset class="bk-step">
+          <legend class="bk-step__title"><span class="bk-step__num">3</span>Контакты</legend>
+          <div class="form__grid">
+            <div class="field">
+              <label for="b-name">Имя</label>
+              <input id="b-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="b-name-err">
+              <p class="field__error" id="b-name-err"></p>
+            </div>
+            <div class="field">
+              <label for="b-phone">Телефон</label>
+              <input id="b-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required data-phone aria-describedby="b-phone-err">
+              <p class="field__error" id="b-phone-err"></p>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label>Не заполняйте это поле <input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <div class="field field--full">
+              <label for="b-comment">Комментарий <span class="field__opt">(необязательно)</span></label>
+              <textarea id="b-comment" name="comment" rows="3" maxlength="1000" placeholder="Повод, детский стул, придёте с собакой…"></textarea>
+            </div>
+          </div>
+        </fieldset>
+
         <p class="form__note">Нажимая «Забронировать», вы соглашаетесь с <a href="privacy.html">политикой конфиденциальности</a>.</p>
         <button class="btn btn--primary form__submit" type="submit">Забронировать</button>
         <p class="form__status" role="status" aria-live="polite"></p>
       </form>
+
+      <div class="bk-done" data-bk-done tabindex="-1" hidden>
+        <svg class="sprig" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <h3 class="bk-done__title">Бронь подтверждена</h3>
+        <p class="bk-done__when" data-bk-done-when></p>
+        <p class="bk-done__where" data-bk-done-where></p>
+        <p class="bk-done__late">Ждём вас! Бронь держим 15 минут после начала — если задерживаетесь, позвоните: <a href="tel:+79052226272">+7 905 222-62-72</a>.</p>
+        <button class="btn btn--outline" type="button" data-bk-again>Забронировать ещё</button>
+      </div>
     </div>
   </section>
 
@@ -608,8 +650,9 @@
 
 <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-<script src="js/config.js?v=20261018-6" defer></script>
-<script src="js/data.js?v=20261018-6" defer></script>
-<script src="js/main.js?v=20261018-6" defer></script>
+<script src="js/config.js?v=20261018-8" defer></script>
+<script src="js/data.js?v=20261018-8" defer></script>
+<script src="js/main.js?v=20261018-8" defer></script>
+<script src="js/booking.js?v=20261018-8" defer></script>
 </body>
 </html>

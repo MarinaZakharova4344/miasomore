@@ -1,0 +1,6 @@
+{
+  "name": "miasomore-booking",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test test/booking.test.mjs" }
+}
